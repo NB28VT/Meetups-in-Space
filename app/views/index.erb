@@ -1,0 +1,12 @@
+<h1><%= @title %></h1>
+
+<h2>Meetups</h2>
+<ul>
+  <% @meetups.each do |meet| %>
+  <li><a href = "/meetup/<%= meet.id %>"><%= meet.title %></a></li>
+  <% end %>
+</ul>
+
+<form action="/add_meetup">
+  <input type= submit value= "Add meetup">
+</form>

@@ -1,0 +1,24 @@
+  <h2><%= @meetup.title %></h2>
+  <ul>
+    <li>Location: <%= @meetup.location %></li>
+    <p>Deets: <%= @meetup.description %></p>
+  </ul>
+
+  <!-- <form action = "/meetup" method = "post">
+    <input type= "submit" value= "Joinup!">
+  </form> -->
+
+  <form action="/meetup/<%= @meetup.id %>/join" method="POST"><button style = "color: black;"> Join this meetup!</button></form>
+
+
+
+
+
+
+  <h3>Who's Going?</h3>
+
+  <% @users.each do |user| %>
+  <ul>
+    <li><%= user.username  %></li>
+  </ul>
+  <% end %>
