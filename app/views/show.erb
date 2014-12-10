@@ -1,6 +1,7 @@
   <h2><%= @meetup.title %></h2>
   <ul>
     <li>Location: <%= @meetup.location %></li>
+    <li>Created at: <%=@meetup.created_at %></li>
     <p>Deets: <%= @meetup.description %></p>
   </ul>
 
@@ -8,17 +9,51 @@
     <input type= "submit" value= "Joinup!">
   </form> -->
 
+
+  <% if @meetup.users.include?(current_user) %>
+    <form action="/meetup/<%= @meetup.id %>/leave" method="POST"><button style = "color: black;"> Leave this stupid meetup</button></form>
+  <% else %>
   <form action="/meetup/<%= @meetup.id %>/join" method="POST"><button style = "color: black;"> Join this meetup!</button></form>
-
-
-
-
+  <% end %>
 
 
   <h3>Who's Going?</h3>
 
   <% @users.each do |user| %>
   <ul>
+    <img src ="<%= user.avatar_url%>">
     <li><%= user.username  %></li>
   </ul>
+  <% end %>
+
+
+  <h4>Comments</h4>
+  <% @comments.each do |comment| %>
+  <ul>
+    <li>
+      <h5><%= comment.title %></h5>
+      <h6><%= comment.body %></h6>
+      <h6>--<%= comment.user.username  %> , <%= comment.created_at %></h6>
+      </li>
+  </ul>
+  <% end %>
+
+
+
+
+  <% if @meetup.users.include?(current_user) %>
+    <h5>Leave a comment (be nice)</h5>
+
+      <form action = '/meetup/<%= @meetup.id %>/add_comment' method ="post">
+        Title<br>
+        <input type="text" name = "title">
+        <br>
+        Comment<br>
+        <input type="textarea" name = "body" required>
+        <br>
+        <button style = "color: black;"> Add comment</button>
+      </form>
+  <% else %>
+    <h5>You must join this group to comment</h5>
+
   <% end %>

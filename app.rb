@@ -38,27 +38,57 @@ end
 get '/meetup/:id' do
   @meetup = Meetup.find(params[:id])
   @users = @meetup.users
+  @comments = @meetup.comments.order(:created_at)
+
   erb :show
 end
 
-post '/meetup/:id/join' do
+post '/meetup/:id/add_comment' do
+  authenticate!
 
+  @user_id = current_user.id
+  @meetup_id = params[:id]
+  @title = params[:title]
+  @body = params[:body]
+
+  comment = Comment.create(user_id:  @user_id, meetup_id: @meetup_id, title: @title, body: @body)
+
+  flash[:notice] = "Comment added!"
+
+  redirect'/'
+end
+
+post '/meetup/:id/join' do
   @user_id = current_user.id
   @meetup_id = params[:id]
 
   Membership.create(user_id: @user_id, meetup_id: @meetup_id )
 
-  flash[:notice] = "You've joined the meetup!"
+  flash[:notice] = "You've joined a meetup!"
+
+  redirect'/'
+end
+
+post '/meetup/:id/leave' do
+  authenticate!
+  @user_id = current_user.id
+  @meetup_id = params[:id]
+
+  membership = Membership.find_by(user_id: @user_id, meetup_id: @meetup_id)
+
+  membership.destroy
+
+  flash[:notice] = "You've left this stupid meetup!"
 
   redirect'/'
 end
 
 get '/add_meetup' do
-
   erb :add_meetup
 end
 
 post '/add_meetup' do
+  authenticate!
   title = params[:title]
   description = params[:description]
   location = params[:location]
